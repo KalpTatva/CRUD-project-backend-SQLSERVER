@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud.core", "crud.core\crud.core.csproj", "{EFC55794-BAD3-4914-B074-2982899D62FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud.service", "crud.service\crud.service.csproj", "{D796D830-44B0-4FA9-9A6B-CC7DE0727D6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud.repository", "crud.repository\crud.repository.csproj", "{DAA80D24-9C18-45AF-94C4-756919146941}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFC55794-BAD3-4914-B074-2982899D62FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFC55794-BAD3-4914-B074-2982899D62FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFC55794-BAD3-4914-B074-2982899D62FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFC55794-BAD3-4914-B074-2982899D62FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D796D830-44B0-4FA9-9A6B-CC7DE0727D6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D796D830-44B0-4FA9-9A6B-CC7DE0727D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D796D830-44B0-4FA9-9A6B-CC7DE0727D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D796D830-44B0-4FA9-9A6B-CC7DE0727D6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAA80D24-9C18-45AF-94C4-756919146941}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAA80D24-9C18-45AF-94C4-756919146941}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAA80D24-9C18-45AF-94C4-756919146941}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAA80D24-9C18-45AF-94C4-756919146941}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
