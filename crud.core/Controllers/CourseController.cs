@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using crud.repository.Models;
 using Microsoft.AspNetCore.Mvc;
 using webapi.Repository.ViewModels;
@@ -18,11 +19,11 @@ public class CourseController : ControllerBase
 
     [Route("[action]")]
     [HttpGet]
-    public IActionResult GetCourses()
+    public async Task<IActionResult> GetCourses()
     {
         try
         {
-            List<Course> courses = _courseService.GetAllCourses();
+            List<Course> courses = await _courseService.GetAllCourses();
             if (courses.Any())
             {
                 return Ok(new { message = "courses found successfully!", data = courses });

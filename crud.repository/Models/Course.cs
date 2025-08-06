@@ -28,4 +28,9 @@ public partial class Course
     public int? DeletedById { get; set; }
 
     public bool? IsDeleted { get; set; }
+
+    internal List<Course> ToListAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

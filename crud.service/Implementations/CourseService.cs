@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using crud.repository.Models;
 using webapi.Repository.Interfaces;
 using webapi.Repository.ViewModels;
@@ -15,11 +16,11 @@ public class CourseService : ICourseService
         _courseRepository = courseRepository;
     }
 
-    public List<Course> GetAllCourses()
+    public async Task<List<Course>> GetAllCourses()
     {
         try
         {
-            return _courseRepository.GetAllCourses();
+            return await _courseRepository.GetAllCourses();
         }
         catch (Exception e)
         {
@@ -59,7 +60,6 @@ public class CourseService : ICourseService
                 Credits = courseViewModel.Credits,
                 Department = courseViewModel.Department.Trim(),
                 CreatedById = courseViewModel.UserId,
-                CreatedAt = DateTime.Now
             };
 
             _courseRepository.AddCourse(course);
@@ -101,8 +101,8 @@ public class CourseService : ICourseService
             course.CourseContent = courseViewModel.CourseContent.Trim();
             course.Credits = courseViewModel.Credits;
             course.Department = courseViewModel.Department.Trim();
-            course.CreatedById = courseViewModel.UserId;
-            course.CreatedAt = DateTime.Now;
+            course.EditedById = courseViewModel.UserId;
+            course.EditedAt = DateTime.Now;
 
             _courseRepository.EditCourse(course);
 
@@ -126,9 +126,8 @@ public class CourseService : ICourseService
             Course? course = _courseRepository.GetCourseById(id);
             if (course != null)
             {
-                course.DeletedAt = DateTime.Now;
-                course.IsDeleted = true;
-                _courseRepository.EditCourse(course);
+
+                _courseRepository.DeleteCourse(id, 2);
                 return new ResponseViewModel
                 {
                     success = true,

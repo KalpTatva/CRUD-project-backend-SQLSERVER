@@ -1,6 +1,8 @@
 
 
+using System.Data;
 using crud.repository.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using webapi.Repository.Implementations;
 using webapi.Repository.Interfaces;
@@ -31,6 +33,13 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<StudentCourseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+
+builder.Services.AddScoped<IDbConnection>(sp =>
+    new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 builder.Services.AddScoped<ICourseService, CourseService>();
 
