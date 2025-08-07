@@ -3,17 +3,15 @@ using System.Collections.Generic;
 
 namespace crud.repository.Models;
 
-public partial class Course
+public partial class UserCourseMapping
 {
+    public int MappingId { get; set; }
+
     public int Courseid { get; set; }
 
-    public string CourseName { get; set; } = null!;
+    public int UserId { get; set; }
 
-    public string CourseContent { get; set; } = null!;
-
-    public int Credits { get; set; }
-
-    public string Department { get; set; } = null!;
+    public int? CourseStatus { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
@@ -29,5 +27,7 @@ public partial class Course
 
     public bool? IsDeleted { get; set; }
 
-    public virtual ICollection<UserCourseMapping> UserCourseMappings { get; set; } = new List<UserCourseMapping>();
+    public virtual Course Course { get; set; } = null!;
+
+    public virtual User User { get; set; } = null!;
 }

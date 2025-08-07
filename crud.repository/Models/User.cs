@@ -3,17 +3,23 @@ using System.Collections.Generic;
 
 namespace crud.repository.Models;
 
-public partial class Course
+public partial class User
 {
-    public int Courseid { get; set; }
+    public int UserId { get; set; }
 
-    public string CourseName { get; set; } = null!;
+    public string UserName { get; set; } = null!;
 
-    public string CourseContent { get; set; } = null!;
+    public string Email { get; set; } = null!;
 
-    public int Credits { get; set; }
+    public string? FirstName { get; set; }
 
-    public string Department { get; set; } = null!;
+    public string? LastName { get; set; }
+
+    public string Phone { get; set; } = null!;
+
+    public string Password { get; set; } = null!;
+
+    public int? RoleId { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
@@ -28,6 +34,8 @@ public partial class Course
     public int? DeletedById { get; set; }
 
     public bool? IsDeleted { get; set; }
+
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
     public virtual ICollection<UserCourseMapping> UserCourseMappings { get; set; } = new List<UserCourseMapping>();
 }
