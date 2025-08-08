@@ -2,12 +2,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Azure.Core;
 using crud.repository.Interfaces;
 using crud.repository.Models;
 using crud.repository.ViewModels;
 using crud.service.Interfaces;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using webapi.Repository.ViewModels;
 using static crud.repository.Helpers.Enums;
 
 namespace crud.service.Implementations;
@@ -39,7 +42,8 @@ public class AuthService : IAuthService
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, req.Email),
-                    new Claim(ClaimTypes.NameIdentifier, user?.UserId.ToString() ?? ""),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("UserId", (user?.UserId ?? 0).ToString()),
                     new Claim(ClaimTypes.Role, RoleName)
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
@@ -76,4 +80,86 @@ public class AuthService : IAuthService
         }
     }
 
+
+    public async Task<AuthResultViewModel> refreshTokenService(RefreshRequestViewModel refresh)
+    {
+        try
+        {
+            ClaimsPrincipal? principal = GetPrincipalFromToken(refresh.AccessToken);
+            if (principal == null)
+            {
+                throw new Exception("Invalid access token!!");
+            }
+            string? jti = principal.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti)?.Value;
+
+            RefreshToken? storedToken = await _refreshTokenRepository.getRefreshToken(refresh.RefreshToken);
+            if (storedToken == null || storedToken.IsUsed == true || storedToken.IsRevoked == true || storedToken.ExpiresAt < DateTime.UtcNow || storedToken.JwtId != jti)
+            {
+                throw new Exception("Invalid refresh token!!");
+            }
+
+            storedToken.IsUsed = true;
+            await _refreshTokenRepository.updateRefreshToken(storedToken);
+
+            int UserId = int.Parse(principal.FindFirstValue("UserId")!);
+            User? user = await _userRepository.getUserById(UserId);
+            if (user == null)
+            {
+                throw new Exception("User not found!!");
+            }
+
+            AuthResultViewModel result = await GenerateToken(new LoginRequestViewModel { Email = user.Email, Password = user.Password, RememberMe = true });
+            return result;
+
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
+
+
+    public ClaimsPrincipal? GetPrincipalFromToken(string token)
+    {
+        JwtSecurityTokenHandler? tokenHandler = new JwtSecurityTokenHandler();
+        try
+        {
+            ClaimsPrincipal? principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidIssuer = _config["Jwt:Issuer"],
+                ValidAudience = _config["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? "")),
+                ValidateLifetime = false
+            }, out SecurityToken? validatedToken);
+
+            if (validatedToken is not JwtSecurityToken jwtToken || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256))
+                return null;
+
+            return principal;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task deleteRefreshToken(string refreshToken)
+    {
+        try
+        {
+            RefreshToken? refreshToken1 = await _refreshTokenRepository.getRefreshToken(refreshToken);
+            if (refreshToken1 != null)
+            {
+                refreshToken1.IsRevoked = true;
+                await _refreshTokenRepository.updateRefreshToken(refreshToken1);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e.Message);
+        }
+    }
 }

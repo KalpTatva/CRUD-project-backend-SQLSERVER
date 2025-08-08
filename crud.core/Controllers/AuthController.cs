@@ -44,4 +44,46 @@ public class AuthController : ControllerBase
             return BadRequest(e.Message);
         }
     }
+
+
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshRequestViewModel refreshRequest)
+    {
+        try
+        {
+            AuthResultViewModel res = await _authService.refreshTokenService(refreshRequest);
+            if (res != null)
+            {
+                return Ok(res);
+            }
+            return Unauthorized();
+        }
+        catch (Exception e)
+        {
+            if (e.Message.Contains("User not found!!"))
+            {
+                return Unauthorized();
+            }
+            else
+            {
+                return BadRequest(e.Message);
+            }
+        }
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout([FromBody] string refreshToken)
+    {
+        try
+        {
+            await _authService.deleteRefreshToken(refreshToken);
+            return Ok("Logged out!!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+
 }

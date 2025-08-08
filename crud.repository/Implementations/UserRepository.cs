@@ -27,4 +27,17 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task<User?> getUserById(int userId)
+    {
+        try
+        {
+            User? user = await _context.Users.FirstOrDefaultAsync(user => user.UserId == userId && user.IsDeleted == false);
+            return user;
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error occured while fatching details : {e.Message}");
+        }
+    }
+
 }

@@ -23,6 +23,13 @@ public class CourseController : ControllerBase
     {
         try
         {
+            string? userId = HttpContext.Items["UserId"]?.ToString();
+
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Invalid or missing token" });
+            }
+
             List<Course> courses = await _courseService.GetAllCourses();
             if (courses.Any())
             {
@@ -42,6 +49,12 @@ public class CourseController : ControllerBase
     {
         try
         {
+            string? userId = HttpContext.Items["UserId"]?.ToString();
+
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Invalid or missing token" });
+            }
             Course? course = _courseService.GetCourseById(id);
             if (course != null)
             {
@@ -61,6 +74,12 @@ public class CourseController : ControllerBase
     {
         try
         {
+            string? userId = HttpContext.Items["UserId"]?.ToString();
+
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Invalid or missing token" });
+            }
             if (ModelState.IsValid)
             {
                 ResponseViewModel response = _courseService.AddCourse(addCourseViewModel);
@@ -87,6 +106,12 @@ public class CourseController : ControllerBase
     {
         try
         {
+            string? userId = HttpContext.Items["UserId"]?.ToString();
+
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Invalid or missing token" });
+            }
             if (ModelState.IsValid)
             {
                 ResponseViewModel response = _courseService.EditCourse(editCourseViewModel);
@@ -113,6 +138,12 @@ public class CourseController : ControllerBase
     {
         try
         {
+            string? userId = HttpContext.Items["UserId"]?.ToString();
+
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "Invalid or missing token" });
+            }
             ResponseViewModel? res = _courseService.DeleteCourseById(id);
             if (res.success)
             {
