@@ -71,19 +71,19 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpPost("logout")]
-    public async Task<IActionResult> Logout([FromBody] string refreshToken)
-    {
-        try
-        {
-            await _authService.deleteRefreshToken(refreshToken);
-            return Ok("Logged out!!");
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-    }
+    // [HttpPost("logout")]
+    // public async Task<IActionResult> Logout([FromBody] string refreshToken)
+    // {
+    //     try
+    //     {
+    //         await _authService.deleteRefreshToken(refreshToken);
+    //         return Ok("Logged out!!");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return BadRequest(e.Message);
+    //     }
+    // }
     
 
 }

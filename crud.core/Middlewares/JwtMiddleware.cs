@@ -18,7 +18,7 @@ public class JwtMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        string? token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ")[1];
 
         if (!string.IsNullOrEmpty(token))
             AttachUserToContext(context, token);
@@ -30,27 +30,28 @@ public class JwtMiddleware
     {
         try
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secret);
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            byte[] key = Encoding.ASCII.GetBytes(_secret);
 
             tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false,  
-                ValidateAudience = false, 
+                ValidateIssuer = false,
+                ValidateAudience = false,
                 ClockSkew = TimeSpan.Zero
             }, out SecurityToken validatedToken);
 
-            var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
+            JwtSecurityToken? jwtToken = (JwtSecurityToken)validatedToken;
+            string? userId = jwtToken.Claims.First(x => x.Type == "UserId").Value;
 
-            // attach userId to HttpContext
+            // user id into context
             context.Items["UserId"] = userId;
         }
-        catch
+        catch (Exception e)
         {
-            // token invalid, just don't attach user
+            Console.WriteLine(e.Message);
+            // token invalid
         }
     }
 }
