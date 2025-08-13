@@ -145,21 +145,4 @@ public class AuthService : IAuthService
             return null;
         }
     }
-
-    public async Task deleteRefreshToken(string refreshToken)
-    {
-        try
-        {
-            RefreshToken? refreshToken1 = await _refreshTokenRepository.getRefreshToken(refreshToken);
-            if (refreshToken1 != null)
-            {
-                refreshToken1.IsRevoked = true;
-                await _refreshTokenRepository.updateRefreshToken(refreshToken1);
-            }
-        }
-        catch (Exception e)
-        {
-            throw new Exception(e.Message);
-        }
-    }
 }
