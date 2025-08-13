@@ -50,8 +50,8 @@ public class JwtMiddleware
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
             // token invalid
+            Console.WriteLine(e.Message);
         }
     }
 }
